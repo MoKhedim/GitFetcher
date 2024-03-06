@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIT Online - GitHub Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .input-container {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-container i {
+            padding: 10px;
+            color: #555;
+        }
+        .input-container input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            outline: none;
+        }
+        .toggle-input {
+            cursor: pointer;
+            color: #000;
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #686868;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #f2f2f2;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #686868;
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Index</a>
+
+<div class="container">
+    <h1>GIT Online</h1>
+    <p>Please enter your GitHub credentials:</p>
+    <div class="input-container">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="Username" required>
+    </div>
+    <div class="input-container">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" required>
+    </div>
+    <p class="toggle-input" id="toggleInput">Use GitHub Token instead</p>
+    <button type="submit" id="loginButton">Login</button>
+</div>
+
+<footer>
+    <p>&copy; 2024 GIT Online. All rights reserved.</p>
+</footer>
+
+<script type="module">
+    import { Octokit, App } from "https://esm.sh/octokit";
+    var isTokenInput = false;
+
+    document.getElementById("toggleInput").addEventListener("click", function() {
+        isTokenInput = !isTokenInput;
+        var passwordInput = document.getElementById("password");
+        if (isTokenInput) {
+            passwordInput.type = "text";
+            passwordInput.placeholder = "GitHub Token";
+            document.getElementById("toggleInput").textContent = "Use Password instead";
+        } else {
+            passwordInput.type = "password";
+            passwordInput.placeholder = "Password";
+            document.getElementById("toggleInput").textContent = "Use GitHub Token instead";
+        }
+    });
+
+    document.getElementById("loginButton").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        if (isTokenInput) {
+            // Handle GitHub token authentication
+            alert("Logging in with GitHub Token: " + password);
+            const octokit = new Octokit({ 
+                auth: password,
+            });
+        } else {
+            // Handle password authentication
+            alert("Logging in with username: " + username + " and password: " + password);
+        }
+    });
+</script>
+
+</body>
+</html>
