@@ -129,7 +129,7 @@
         }
     });
 
-    document.getElementById("loginButton").addEventListener("click", function(event) {
+    document.getElementById("loginButton").addEventListener("click", async function(event) {
         event.preventDefault(); // Prevent form submission
 
         var username = document.getElementById("username").value;
@@ -137,10 +137,10 @@
 
         if (isTokenInput) {
             // Handle GitHub token authentication
-            alert("Logging in with GitHub Token: " + password);
             const octokit = new Octokit({ 
                 auth: password,
             });
+           
         } else {
             // Handle password authentication
             alert("Logging in with username: " + username + " and password: " + password);
