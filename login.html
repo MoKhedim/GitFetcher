@@ -101,9 +101,8 @@
     </div>
     <div class="input-container">
         <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" required>
+        <input type="password" id="password" placeholder="GitHub Token" required>
     </div>
-    <p class="toggle-input" id="toggleInput">Use GitHub Token instead</p>
     <button type="submit" id="loginButton">Login</button>
 </div>
 
@@ -115,36 +114,18 @@
     import { Octokit, App } from "https://esm.sh/octokit";
     var isTokenInput = false;
 
-    document.getElementById("toggleInput").addEventListener("click", function() {
-        isTokenInput = !isTokenInput;
-        var passwordInput = document.getElementById("password");
-        if (isTokenInput) {
-            passwordInput.type = "text";
-            passwordInput.placeholder = "GitHub Token";
-            document.getElementById("toggleInput").textContent = "Use Password instead";
-        } else {
-            passwordInput.type = "password";
-            passwordInput.placeholder = "Password";
-            document.getElementById("toggleInput").textContent = "Use GitHub Token instead";
-        }
-    });
-
     document.getElementById("loginButton").addEventListener("click", async function(event) {
         event.preventDefault(); // Prevent form submission
 
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
 
-        if (isTokenInput) {
-            // Handle GitHub token authentication
-            const octokit = new Octokit({ 
-                auth: password,
-            });
-           
-        } else {
-            // Handle password authentication
-            alert("Logging in with username: " + username + " and password: " + password);
-        }
+        // Handle GitHub token authentication
+        const octokit = new Octokit({ 
+            auth: password,
+        });
+        const { data } = await octokit.request("/user");
+        console.log(data)
     });
 </script>
 
