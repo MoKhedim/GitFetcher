@@ -86,6 +86,12 @@
         .back-button:hover {
             background-color: #686868;
         }
+        #errorMessage {
+            color: #000;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -104,6 +110,7 @@
         <input type="password" id="password" placeholder="GitHub Token" required>
     </div>
     <button type="submit" id="loginButton">Login</button>
+    <div id="errorMessage"></div>
 </div>
 
 <footer>
@@ -111,6 +118,9 @@
 </footer>
 
 <script type="module">
+    if(sessionStorage.getItem("Github Token") != null){
+        window.location.replace("http://127.0.0.1:57596/home.html");
+    }
     import { Octokit, App } from "https://esm.sh/octokit";
     var isTokenInput = false;
 
@@ -124,8 +134,20 @@
         const octokit = new Octokit({ 
             auth: password,
         });
+        try {
         const { data } = await octokit.request("/user");
-        console.log(data)
+            // Code to handle successful response
+        sessionStorage.setItem("Github Token", password)
+        } catch (error) {
+            if (error.status === 401) {
+                // Display error message
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = "Wrong token try again.";
+            } else {
+                // Handle other errors
+                console.error(error);
+            }
+        }
     });
 </script>
 
