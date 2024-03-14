@@ -42,6 +42,18 @@
         .repo-box p {
             margin-bottom: 0;
         }
+        .logout-btn {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout-btn:hover {
+            background-color: #686868;
+        }
     </style>
 </head>
 <body>
@@ -49,6 +61,7 @@
 <header>
     <h1>GIT Online</h1>
     <p>Welcome to your GitHub profile</p>
+    <button class="logout-btn">Logout</button>
 </header>
 
 <div class="container">
@@ -73,10 +86,27 @@
     <!-- Add more repository boxes as needed -->
 </div>
 
-<script>
-
+<script type=module>
+    import octokit from './octokit-config.js'
     
+    octokit.auth = sessionStorage.getItem("Github Token")
+    console.log(octokit)
+    
+    const {data: { topics },} = await octokit.rest.repos.get({
+    owner: "octokit",
+    repo: "rest.js",
+    mediaType: {
+    previews: ["symmetra"],
+    },
+    });
 
+    // Add event listener to logout button
+    document.querySelector('.logout-btn').addEventListener('click', function() {
+        // Clear session storage
+        sessionStorage.clear();
+        // Redirect to login page or perform other logout actions
+        window.location.href = 'login.html';
+    });
 </script>
 
 </body>
