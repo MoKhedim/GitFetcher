@@ -119,6 +119,7 @@
 
 <script type="module">
     import octokit from './octokit-config.js'; // Import Octokit configuration
+    const octokit = new Octokit();
 
     document.getElementById("loginButton").addEventListener("click", async function(event) {
         event.preventDefault(); // Prevent form submission
@@ -135,6 +136,7 @@
             // Code to handle successful response
         sessionStorage.setItem("Github Token", password)
         sessionStorage.setItem("Username", username)
+        window.location.reload();
         } catch (error) {
             if (error.status === 401) {
                 // Display error message
