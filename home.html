@@ -59,45 +59,57 @@
 <body>
 
 <header>
+    <div class="profile-info" id="profile-info">
+        <!-- Profile picture and username will be displayed here -->
+    </div>
     <h1>GIT Online</h1>
     <p>Welcome to your GitHub profile</p>
     <button class="logout-btn">Logout</button>
 </header>
 
-<div class="container">
-    <!-- Example repository box, replace with dynamic content from GitHub API -->
-    <div class="repo-box">
-        <h2>Repository Name</h2>
-        <p>Description of the repository goes here.</p>
-        <p><i class="fas fa-code-branch"></i> Branch: main</p>
-        <p><i class="fas fa-star"></i> Stars: 1000</p>
-        <p><i class="fas fa-eye"></i> Watchers: 500</p>
-    </div>
-
-    <!-- Example repository box, replace with dynamic content from GitHub API -->
-    <div class="repo-box">
-        <h2>Another Repository</h2>
-        <p>Description of another repository.</p>
-        <p><i class="fas fa-code-branch"></i> Branch: develop</p>
-        <p><i class="fas fa-star"></i> Stars: 500</p>
-        <p><i class="fas fa-eye"></i> Watchers: 200</p>
-    </div>
-
-    <!-- Add more repository boxes as needed -->
+<div class="container" id="repo-container">
+    <!-- Repository boxes will be added dynamically here -->
 </div>
 
 <script type=module>
-    import octokit from './octokit-config.js'
+    import { Octokit } from "https://esm.sh/octokit";
+
+    function setSelectedRepo(event, repo) {
+        event.preventDefault();
+        sessionStorage.setItem('selectedRepo', JSON.stringify(repo));
+        window.location.href = 'repoPage.html';
+    }
     
-    octokit.auth = sessionStorage.getItem("Github Token")
-    console.log(octokit)
+    const octokit = new Octokit({
+        auth: sessionStorage.getItem("Github Token"),
+    });
     
-    const {data: { topics },} = await octokit.rest.repos.get({
-    owner: "octokit",
-    repo: "rest.js",
-    mediaType: {
-    previews: ["symmetra"],
-    },
+    // Retrieve user data from session storage
+    let userDataString = sessionStorage.getItem("UserData");
+    let userData = JSON.parse(userDataString);
+
+
+    // Retrieve repositories data from GitHub API
+    octokit.request(`/users/${userData.login}/repos`).then(({ data }) => {
+        const repoContainer = document.getElementById("repo-container");
+        
+        // Iterate over repositories data and create repo boxes
+        data.forEach(repo => {
+            const repoBox = document.createElement("div");
+            repoBox.classList.add("repo-box");
+            
+            // Populate repo box with repository information
+            repoBox.innerHTML = `
+            <a href=repoPage.html onclick="setSelectedRepo(event, ${JSON.stringify(repo)})"><h2>${repo.name}</h2></a>
+                <p>${repo.description}</p>
+                <p><i class="fas fa-code-branch"></i> Branch: ${repo.default_branch}</p>
+                <p><i class="fas fa-star"></i> Stars: ${repo.stargazers_count}</p>
+                <p><i class="fas fa-eye"></i> Watchers: ${repo.watchers_count}</p>
+            `;
+            // Append repo box to container
+            repoContainer.appendChild(repoBox);
+        });
+
     });
 
     // Add event listener to logout button

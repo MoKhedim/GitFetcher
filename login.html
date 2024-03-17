@@ -118,8 +118,8 @@
 </footer>
 
 <script type="module">
-    import octokit from './octokit-config.js'; // Import Octokit configuration
-
+    import { Octokit } from "https://esm.sh/octokit";
+    
     document.getElementById("loginButton").addEventListener("click", async function(event) {
         event.preventDefault(); // Prevent form submission
 
@@ -127,14 +127,16 @@
         var password = document.getElementById("password").value;
 
         // Handle GitHub token authentication
-        octokit.auth = password
-
         try {
-        const { data } = await octokit.request("/user");
-        
-            // Code to handle successful response
-        sessionStorage.setItem("Github Token", password)
-        sessionStorage.setItem("Username", username)
+            const octokit = new Octokit({
+                auth: password,
+            });
+            const { data } = await octokit.request("/user");
+            
+                // Code to handle successful response
+            sessionStorage.setItem("Github Token", password)
+            sessionStorage.setItem("UserData", JSON.stringify(data))
+
         } catch (error) {
             if (error.status === 401) {
                 // Display error message

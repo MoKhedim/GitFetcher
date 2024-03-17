@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIT Online - Repository Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .repo-details {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .repo-details h2 {
+            margin-top: 0;
+        }
+        .repo-details p {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GIT Online - Repository Details</h1>
+    <p>Viewing details of the selected repository</p>
+</header>
+
+<div class="container">
+    <div class="repo-details" id="repoDetails">
+        <!-- Repository details will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+    // Retrieve the selected repository data from sessionStorage
+    const selectedRepo = JSON.parse(sessionStorage.getItem('selectedRepo'));
+
+    // Populate the repository details on the page
+    const repoDetails = document.getElementById('repoDetails');
+    repoDetails.innerHTML = `
+        <h2>${selectedRepo.name}</h2>
+        <p>${selectedRepo.description}</p>
+        <p><i class="fas fa-code-branch"></i> Branch: ${selectedRepo.default_branch}</p>
+        <p><i class="fas fa-star"></i> Stars: ${selectedRepo.stargazers_count}</p>
+        <p><i class="fas fa-eye"></i> Watchers: ${selectedRepo.watchers_count}</p>
+    `;
+</script>
+
+</body>
+</html>
